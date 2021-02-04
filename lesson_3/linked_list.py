@@ -1,5 +1,5 @@
 from typing import Any, Sequence, Optional
-
+from collections.abc import Iterable
 
 class LinkedList:
     class Node:
@@ -42,67 +42,98 @@ class LinkedList:
 
     def __init__(self, data: Sequence = None):
         """Конструктор связного списка"""
-        self.len_ = 0
+        self.__len = 0
         self.head = None  # Node
+        self.tail = None
 
-        if data:  # ToDo Проверить, что объект итерируемый. Метод self.is_iterable
+        if self.is_iterable(data):  # ToDo Проверить, что объект итерируемый. Метод self.is_iterable
             for value in data:
                 self.append(value)
 
     def __str__(self):
         """Вызывается функциями str, print и format. Возвращает строковое представление объекта."""
-        result = []
-        current_node = self.head
-
-        for _ in range(self.len_ - 1):
-            result.append(current_node.value)
-            current_node = current_node.next
-
-        result.append(current_node.value)
-
-        return f"{result}"
+        return f'{[value for value in self]}'
 
     def __repr__(self):
         """Метод должен возвращать строку, показывающую, как может быть создан экземпляр."""
-        return ""
+        result = [value for value in self]
+        return f'{self.__class__.__name__}({result})'
 
     def __len__(self):
-        ...
+        return self.__len
 
     def __getitem__(self, item: int) -> Any:
-        ...
+        if not isinstance(item, int):
+            raise TypeError()
+
+        if not 0 <= item < self.__len:
+            raise IndexError()
+
+        current_node = self.head
+        for _ in range(item):
+            current_node = current_node.next
+        return current_node.value
 
     def __setitem__(self, key, value):
-        ...
+        if not isinstance(key, int):
+            raise TypeError()
+
+        if not 0 <= key < self.__len:
+            raise IndexError()
+        current_node = self.head
+        for _ in range(key):
+            current_node = current_node.next
+        current_node.value = value
 
     def append(self, value: Any):
         """Добавление элемента в конец связного списка"""
         append_node = self.Node(value)
         if self.head is None:
             self.head = append_node
+            self.tail = append_node
         else:
-            tail = self.head  # ToDo Завести атрибут self.tail, который будет хранить последний узел
-            for _ in range(self.len_ - 1):
-                tail = tail.next
-            self.__linked_nodes(tail, append_node)
-
-        self.len_ += 1
+            # ToDo Завести атрибут self.tail, который будет хранить последний узел
+            self.__linked_nodes(self.tail, append_node)
+            self.tail = append_node
+        self.__len += 1
 
     @staticmethod
     def __linked_nodes(left: Node, right: Optional[Node]) -> None:
         left.next = right
 
     def to_list(self) -> list:
-        ...
+        return [value for value in self]
 
     def insert(self, index: int, value: Any) -> None:
-        ...
+        if index == 0:
+            first_node = self.Node(value)
+            self.__linked_nodes(first_node, self.head)
+            self.head = first_node
+            self.__len += 1
+        elif 0 < index < (self.__len - 1):
+            insert_node = self.Node(value)
+            prev_node = self.head
+            for _ in range(index-1):
+                prev_node = prev_node.next
+            next_node = prev_node.next
+            self.__linked_nodes(prev_node, insert_node)
+            self.__linked_nodes(insert_node, next_node)
+            self.__len += 1
+        elif index >= self.__len:
+            self.append(value)
 
     def clear(self) -> None:
-        ...
+        self.head = None
+        self.__len = 0
 
     def index(self, value: Any) -> int:
-        ...
+        current_node = self.head
+        for i in range(self.__len):
+            if current_node.value == value:
+                return i
+            else:
+                current_node = current_node.next
+        raise ValueError(f'{value} not in list')
 
     def remove(self, value: Any) -> None:
         ...
@@ -112,9 +143,13 @@ class LinkedList:
 
     def is_iterable(self, data) -> bool:
         """Метод для проверки является ли объект итерируемым"""
-        ...
+        if iter(data):
+            return True
 
 
 if __name__ == '__main__':
-    ll = LinkedList([1, 2, 3, 4])
+    ll = LinkedList([1, 2, 3, 4, 5])
+    ll.remove(3)
     print(ll)
+    l = ['a', 'b', 'c', 'd', 'e', 'f']
+    # print(l.index('b'))
