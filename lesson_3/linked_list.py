@@ -136,7 +136,23 @@ class LinkedList:
         raise ValueError(f'{value} not in list')
 
     def remove(self, value: Any) -> None:
-        ...
+        current_node = self.head
+        left_node = self.head
+        search_result = False
+        for i in range(self.__len):
+            if current_node.value == value:
+                for _ in range(i-1):
+                    left_node = left_node.next
+                next_node = current_node.next
+                current_node.value = None
+                self.__linked_nodes(left_node, next_node)
+                self.__len -= 1
+                search_result = True
+                break
+            else:
+                current_node = current_node.next
+        if not search_result:
+            raise ValueError(f'{value} not in list')
 
     def sort(self) -> None:
         ...
@@ -148,8 +164,8 @@ class LinkedList:
 
 
 if __name__ == '__main__':
-    ll = LinkedList([1, 2, 3, 4, 5])
-    ll.remove(3)
+    ll = LinkedList([1, 2, 3, 4,5,6])
+    ll.remove(9)
     print(ll)
-    l = ['a', 'b', 'c', 'd', 'e', 'f']
+
     # print(l.index('b'))
