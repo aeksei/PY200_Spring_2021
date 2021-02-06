@@ -65,13 +65,18 @@ class LinkedList:
         if not isinstance(item, int):
             raise TypeError()
 
-        if not 0 <= item < self.__len:
+        if abs(item) > self.__len:
             raise IndexError()
 
         current_node = self.head
-        for _ in range(item):
-            current_node = current_node.next
-        return current_node.value
+        if item >= 0:
+            for _ in range(item):
+                current_node = current_node.next
+            return current_node.value
+        elif item < 0:
+            for _ in range(self.__len + item):
+                current_node = current_node.next
+            return current_node.value
 
     def __setitem__(self, key, value):
         if not isinstance(key, int):
@@ -83,6 +88,9 @@ class LinkedList:
         for _ in range(key):
             current_node = current_node.next
         current_node.value = value
+
+    def __reversed__(self):
+        ...
 
     def append(self, value: Any):
         """Добавление элемента в конец связного списка"""
@@ -164,6 +172,7 @@ class LinkedList:
                     correct_compare = True
                 current_elem = current_elem.next
 
+
     def is_iterable(self, data) -> bool:
         """Метод для проверки является ли объект итерируемым"""
         if hasattr(data, '__iter__'):
@@ -172,7 +181,4 @@ class LinkedList:
 
 if __name__ == '__main__':
     ll = LinkedList([1,2,3,4,5])
-
-    # ll.sort()
-    # print(ll)
-    # print(ll.remove(55))
+    print(ll[-6])
