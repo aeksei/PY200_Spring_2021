@@ -1,5 +1,4 @@
 from typing import Any, Sequence, Optional
-from collections.abc import Iterable
 
 class LinkedList:
     class Node:
@@ -167,13 +166,13 @@ class LinkedList:
 
     def is_iterable(self, data) -> bool:
         """Метод для проверки является ли объект итерируемым"""
-        if data.__iter__():
+        if hasattr(data, '__iter__'):
             return True
+        raise AttributeError(f'{data.__class__.__name__} is not iterable')
 
 if __name__ == '__main__':
-    ll = LinkedList([1,2,3,4])
-    print(ll)
+    ll = LinkedList([1,2,3,4,5])
+
     # ll.sort()
+    # print(ll)
     # print(ll.remove(55))
-    l='ar'
-    # print(l.__iter__())
