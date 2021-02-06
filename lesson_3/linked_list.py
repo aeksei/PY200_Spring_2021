@@ -167,11 +167,13 @@ class LinkedList:
 
     def is_iterable(self, data) -> bool:
         """Метод для проверки является ли объект итерируемым"""
-        if iter(data):
+        if data.__iter__():
             return True
 
 if __name__ == '__main__':
-    ll = LinkedList([5,6,1,2,55,4,13,11,7,89,56])
-    ll.sort()
+    ll = LinkedList([1,2,3,4])
     print(ll)
-    print(ll.index(13))
+    # ll.sort()
+    # print(ll.remove(55))
+    l='ar'
+    # print(l.__iter__())
