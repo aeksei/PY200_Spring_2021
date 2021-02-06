@@ -155,17 +155,23 @@ class LinkedList:
             raise ValueError(f'{value} not in list')
 
     def sort(self) -> None:
-        ...
+        correct_compare = True
+        while correct_compare:
+            correct_compare = False
+            current_elem = self.head
+            for i in range(self.__len-1):
+                if current_elem.value > current_elem.next.value:
+                    current_elem.value, current_elem.next.value = current_elem.next.value, current_elem.value
+                    correct_compare = True
+                current_elem = current_elem.next
 
     def is_iterable(self, data) -> bool:
         """Метод для проверки является ли объект итерируемым"""
         if iter(data):
             return True
 
-
 if __name__ == '__main__':
-    ll = LinkedList([1, 2, 3, 4,5,6])
-    ll.remove(9)
+    ll = LinkedList([5,6,1,2,55,4,13,11,7,89,56])
+    ll.sort()
     print(ll)
-
-    # print(l.index('b'))
+    print(ll.index(13))
