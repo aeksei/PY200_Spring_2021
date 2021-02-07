@@ -94,7 +94,8 @@ class LinkedList:
         current_node.value = value
 
     def __reversed__(self):
-        ...
+        for elem in self[::-1]:
+            yield elem
 
     def append(self, value: Any):
         """Добавление элемента в конец связного списка"""
@@ -185,5 +186,9 @@ class LinkedList:
 
 if __name__ == '__main__':
     ll = LinkedList([1,2,3,4,5])
-    print(ll[-1:-3:-1])
+
+
+    l = [1,2,3,4]
+
+    print(next(ll.__reversed__()))
 
