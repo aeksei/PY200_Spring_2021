@@ -62,21 +62,25 @@ class LinkedList:
         return self.__len
 
     def __getitem__(self, item: int) -> Any:
-        if not isinstance(item, int):
-            raise TypeError()
+        if isinstance(item, slice):
+            start, stop, step = item.indices(len(self))
+            return [self[i] for i in range(start, stop, step)]
 
-        if abs(item) > self.__len:
-            raise IndexError()
+        elif isinstance(item, int):
+            if not isinstance(item, int):
+                raise TypeError()
+            elif abs(item) > self.__len:
+                raise IndexError()
 
-        current_node = self.head
-        if item >= 0:
-            for _ in range(item):
-                current_node = current_node.next
-            return current_node.value
-        elif item < 0:
-            for _ in range(self.__len + item):
-                current_node = current_node.next
-            return current_node.value
+            current_node = self.head
+            if item >= 0:
+                for _ in range(item):
+                    current_node = current_node.next
+                return current_node.value
+            elif item < 0:
+                for _ in range(self.__len + item):
+                    current_node = current_node.next
+                return current_node.value
 
     def __setitem__(self, key, value):
         if not isinstance(key, int):
@@ -181,4 +185,5 @@ class LinkedList:
 
 if __name__ == '__main__':
     ll = LinkedList([1,2,3,4,5])
-    print(ll[-6])
+    print(ll[-1:-3:-1])
+
