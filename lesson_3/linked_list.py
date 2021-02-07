@@ -76,7 +76,6 @@ class LinkedList:
         return current_node
 
     def __getitem__(self, item: int) -> Any:
-        # print("вызван геттер")
         current_node = self.__step_by_step_on_nodes(item)
 
         return current_node.value
@@ -140,7 +139,24 @@ class LinkedList:
             index_ += 1
 
     def remove(self, value: Any) -> None:
-        ...
+        index_ = self.index(value)
+        if index_ == 0:
+            self[index_] = None
+            self.head = self.__step_by_step_on_nodes(index_ + 1)
+            self.__len -= 1
+
+        elif 0 < self.index(value) < self.__len:
+            prev_node = self.__step_by_step_on_nodes(index_ - 1)
+            remove_node = prev_node.next
+            next_node = remove_node.next
+            # remove_node = self.Node(value, next_=current_node)
+            self.__linked_nodes(prev_node, next_node)
+            self.__len -= 1
+
+        elif self.index(value) == self.__len - 1:
+            prev_node = self.__step_by_step_on_nodes(index_ - 1)
+            prev_node = None
+            self.__len -= 1
 
     def sort(self) -> None:
         ...
@@ -171,4 +187,9 @@ if __name__ == '__main__':
     # print(l1)
     # l1.insert(len(l1), 'last_value')
     # print(l1)
-    print(l1.index('e'))
+    # print(l1.index('e'))
+    # l1.remove('a')
+    # l1.remove('d')
+    l1.remove('b')
+    print(l1)
+
