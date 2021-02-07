@@ -135,7 +135,7 @@ class LinkedList:
             if self[index_] == value:
                 return index_
             elif index_ == self.__len - 1:
-                raise ValueError(f"{value} is not in {LinkedList.__name__}")
+                raise ValueError(f"{value} is not in {self.__class__.__name__}")
             index_ += 1
 
     def remove(self, value: Any) -> None:
@@ -149,7 +149,6 @@ class LinkedList:
             prev_node = self.__step_by_step_on_nodes(index_ - 1)
             remove_node = prev_node.next
             next_node = remove_node.next
-            # remove_node = self.Node(value, next_=current_node)
             self.__linked_nodes(prev_node, next_node)
             self.__len -= 1
 
@@ -159,7 +158,19 @@ class LinkedList:
             self.__len -= 1
 
     def sort(self) -> None:
-        ...
+        list_ = [ord(i) if type(i) == str else i for i in self]
+        self.clear()
+        flag = True
+        iterations = 0
+        while flag:
+            flag = False
+            for i in range(len(list_) - iterations - 1):
+                if list_[i] > list_[i + 1]:
+                    list_[i], list_[i + 1] = list_[i + 1], list_[i]
+                    flag = True
+        iterations += 1
+        for elem in list_:
+            self.append(elem)
 
     def is_iterable(self, data) -> bool:
         """Метод для проверки является ли объект итерируемым"""
@@ -190,6 +201,9 @@ if __name__ == '__main__':
     # print(l1.index('e'))
     # l1.remove('a')
     # l1.remove('d')
-    l1.remove('b')
-    print(l1)
-
+    # l1.remove('b')
+    # print(l1)
+    l2 = LinkedList(['\\', 'c', 'd', 5, 234, 5476, 77])
+    print(l2)
+    l2.sort()
+    print(l2)
