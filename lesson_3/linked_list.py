@@ -185,10 +185,18 @@ class LinkedList:
         raise AttributeError(f'{data.__class__.__name__} is not iterable')
 
 if __name__ == '__main__':
-    ll = LinkedList([1,2,3,4,5])
+    l = LinkedList('sdgr')
+    l[1] = 'w'
+    l.append('e')
+    l.insert(8,'t')
+    # l.clear()
+    # l.insert(8, 't')
+    l.sort()
+    l.remove('s')
+    # print(l[::])
+    print(l)
 
 
-    l = [1,2,3,4]
 
-    print(next(ll.__reversed__()))
+
 
