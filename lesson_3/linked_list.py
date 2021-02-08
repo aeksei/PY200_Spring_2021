@@ -174,7 +174,10 @@ class LinkedList:
 
     def is_iterable(self, data) -> bool:
         """Метод для проверки является ли объект итерируемым"""
-        return True if hasattr(self, '__iter__') else False
+        if hasattr(data, '__iter__'):
+            return True
+        else:
+            raise AttributeError(f'{data.__class__.__name__} is not iterable')
 
     def __contains__(self, item: Any):
         return any(item == value for value in self)
