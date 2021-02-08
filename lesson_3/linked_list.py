@@ -174,7 +174,7 @@ class LinkedList:
 
     def is_iterable(self, data) -> bool:
         """Метод для проверки является ли объект итерируемым"""
-        ...
+        return True if hasattr(self, '__iter__') else False
 
     def __contains__(self, item: Any):
         return any(item == value for value in self)
@@ -204,6 +204,7 @@ if __name__ == '__main__':
     # l1.remove('b')
     # print(l1)
     l2 = LinkedList(['\\', 'c', 'd', 5, 234, 5476, 77])
-    print(l2)
-    l2.sort()
-    print(l2)
+    # print(l2)
+    # l2.sort()
+    # print(l2)
+    print(l2.is_iterable('adv'))
