@@ -45,8 +45,9 @@ class LinkedList:
         """Конструктор связного списка"""
         self.__len = 0
         self.head = None  # Node
+        self.tail = None
 
-        if data:  # ToDo Проверить, что объект итерируемый. Метод self.is_iterable
+        if self.is_iterable(data):  # ToDo Проверить, что объект итерируемый. Метод self.is_iterable
             for value in data:
                 self.append(value)
 
@@ -90,11 +91,11 @@ class LinkedList:
         append_node = self.Node(value)
         if self.head is None:
             self.head = append_node
+            self.tail = append_node
         else:
-            tail = self.head  # ToDo Завести атрибут self.tail, который будет хранить последний узел
-            for _ in range(self.__len - 1):
-                tail = tail.next
-            self.__linked_nodes(tail, append_node)
+            # ToDo Завести атрибут self.tail, который будет хранить последний узел
+            self.__linked_nodes(self.tail, append_node)
+            self.tail = append_node
 
         self.__len += 1
 
