@@ -51,11 +51,26 @@ class LinkedList:
 
     def __str__(self):
         """Вызывается функциями str, print и format. Возвращает строковое представление объекта."""
-        return f'{[value for value in self]}'
+        result = []
+        current_node = self.head
+
+        for _ in range(self.__len - 1):
+            result.append(current_node.value)
+            current_node = current_node.next
+
+        result.append(current_node.value)
+        return f"{result}"
 
     def __repr__(self):
         """Метод должен возвращать строку, показывающую, как может быть создан экземпляр."""
-        result = [value for value in self]
+        result = []
+        current_node = self.head
+
+        for _ in range(self.__len - 1):
+            result.append(current_node.value)
+            current_node = current_node.next
+
+        result.append(current_node.value)
         return f'{self.__class__.__name__}({result})'
 
     def __len__(self):
@@ -194,7 +209,7 @@ if __name__ == '__main__':
     # l.sort()
     # l.remove('s')
     # print(l[::])
-    print(ll)
+    print(repr(ll))
 
 
 
