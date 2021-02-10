@@ -64,10 +64,10 @@ class LinkedList:
 
     def __step_by_step_on_nodes(self, index):
         if not isinstance(index, int):
-            raise TypeError(f"Int must be not")
+            raise TypeError(f"Index must be {int.__name__} not {index.__class__.__name__}")
 
-        if not 0 <= index < self.__len:
-            raise IndexError()
+        if not 0 - self.__len <= index < self.__len:  # TODO подумать об отрицательной индексации
+            raise IndexError(f"{self.__class__.__name__} index out of range")
 
         current_node = self.head
 
@@ -85,6 +85,9 @@ class LinkedList:
         current_node = self.__step_by_step_on_nodes(key)
 
         current_node.value = value
+
+    def __reversed__(self):
+        return iter(self[::-1])
 
     def append(self, value: Any):
         """Добавление элемента в конец связного списка"""
@@ -154,8 +157,7 @@ class LinkedList:
             self.__len -= 1
 
         elif self.index(value) == self.__len - 1:
-            prev_node = self.__step_by_step_on_nodes(index_ - 1)
-            prev_node = None
+            self.tail = None
             self.__len -= 1
 
     def sort(self) -> None:
@@ -169,7 +171,7 @@ class LinkedList:
                 if list_[i] > list_[i + 1]:
                     list_[i], list_[i + 1] = list_[i + 1], list_[i]
                     flag = True
-        iterations += 1
+            iterations += 1
         for elem in list_:
             self.append(elem)
 
@@ -186,7 +188,7 @@ class LinkedList:
 
 if __name__ == '__main__':
     # ll = LinkedList([1, 2, 3, 4])
-    l1 = LinkedList('abcd')
+    # l1 = LinkedList('abcd')
     # print(ll)
     # l1[4] = 'f'
     # print(l1)
@@ -204,11 +206,15 @@ if __name__ == '__main__':
     # print(l1)
     # print(l1.index('e'))
     # l1.remove('a')
-    # l1.remove('d')
     # l1.remove('b')
+    # l1.remove('c')
+    # l1.remove('d')
     # print(l1)
+    # print(l1[0])
     l2 = LinkedList(['\\', 'c', 'd', 5, 234, 5476, 77])
-    # print(l2)
+    print(l2)
     # l2.sort()
     # print(l2)
-    print(l2.is_iterable('adv'))
+    # print(l2.is_iterable('adv'))
+    # print(l2)
+    # print(ll.__repr__())
