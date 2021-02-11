@@ -43,8 +43,8 @@ class LinkedList:
     def __init__(self, data: Sequence = None):
         """Конструктор связного списка"""
         self.__len = 0
-        self.head = None  # todo реализовать getter и setter для head и tail
-        self.tail = None
+        self.__head = None
+        self.__tail = None
 
         if data:
             if self.is_iterable(data):
@@ -52,6 +52,32 @@ class LinkedList:
                     self.append(value)
             else:
                 self.append(data)
+
+    @property
+    def head(self):
+        """Getter возвращает первый узел связанного списка"""
+        return self.__head
+
+    @head.setter
+    def head(self, value):
+        """Setter выполняет проверку на содержимое для установки значения head"""
+        if isinstance(value, self.Node.__class__) or value is None:
+            self.__head = value
+        else:
+            raise TypeError(f"{value} is not a proper value for head of the list")
+
+    @property
+    def tail(self):
+        """Getter возвращает последний узел связанного списка"""
+        return self.__tail
+
+    @tail.setter
+    def tail(self, value):
+        """Setter выполняет проверку на содержимое для установки значения head"""
+        if isinstance(value, self.Node.__class__) or value is None:
+            self.__tail = value
+        else:
+            raise TypeError(f"{value} is not a proper value for tail of the list")
 
     def __str__(self):
         """Вызывается функциями str, print и format. Возвращает строковое представление объекта."""
@@ -76,29 +102,20 @@ class LinkedList:
 
     def __setitem__(self, index, value):
         if self.__is_index(index):
-            if index < self.__len:
-                item = self.__get_node(index)
-                item.value = value
-            else:
-                raise IndexError(f"Index {index} out of bounds")
+            item = self.__get_node(index)
+            item.value = value
         else:
             raise TypeError(f"Value {index} is not a valid index")
-
-    def __get_node(self, index: int) -> Any:
-        current_node = self.head
-        for _ in range(index):
-            current_node = current_node.next
-        return current_node
 
     def append(self, value: Any, increase_index=True):
         """Добавление элемента в конец связного списка"""
         append_node = self.Node(value)
-        if self.head is None:
-            self.head = append_node
-            self.tail = append_node
+        if self.__head is None:
+            self.__head = append_node
+            self.__tail = append_node
         else:
-            self.__linked_nodes(self.tail, append_node)
-            self.tail = append_node
+            self.__linked_nodes(self.__tail, append_node)
+            self.__tail = append_node
 
         if increase_index:
             self.__len += 1
@@ -107,41 +124,69 @@ class LinkedList:
         return [value for value in self]    # Итерирование мы уже реализовали с помощью магии, вот пусть оно и работает
 
     def insert(self, index: int, value: Any) -> None:
-        # todo добавить проверку индекса
-        if index == 0:  # если первый элемент
-            to_insert = self.Node(value, self.head)
-            self.head = to_insert
-        if index == self.__len - 1:  # если последний элемент
-            self.append(value, False)
-        else:   # если любой другой элемент
-            left = self.__get_node(index - 1)
-            right = left.next
-            to_insert = self.Node(value, right)
-            left.next = to_insert
-        self.__len += 1
+        if self.__is_index(index):
+            if index == 0:  # если первый элемент
+                to_insert = self.Node(value, self.__head)
+                self.__head = to_insert
+            if index == self.__len - 1:  # если последний элемент
+                self.append(value, False)
+            else:   # если любой другой элемент
+                left = self.__get_node(index - 1)
+                right = left.next
+                to_insert = self.Node(value, right)
+                left.next = to_insert
+            self.__len += 1
 
     def clear(self) -> None:    # в питоне только так, за нас память чистит сборщик мусора
-        self.head = None
+        self.__head = None
         self.__len = 0
 
     def index(self, value: Any) -> int:
-        ...
+        index = 0
+        for node in self:
+            if node.value == value:
+                return index
+            index += 1
+
+        raise ValueError(f"{value} is not not in list")
 
     def remove(self, value: Any) -> None:
-        ...
+        """Ищем узел по значению и удаляем его из списка"""
+        index = self.index(value)
+        if index == 0:  # если первый элемент
+            self.__head = self.__head.next
+        else:  # если любой другой элемент
+            left = self.__get_node(index - 1)
+            current = self.__get_node(index)
+            right = current.next
+            left.next = right
+        self.__len -= 1
 
     def sort(self) -> None:
-        ...
+        """сортирует список по возрастанию"""
+        ll_to_list = self.to_list()
+        sorted_ll = sorted(ll_to_list)
+        self.clear()
+        for value in sorted_ll:
+            self.append(value)
+
+    def __get_node(self, index: int) -> Any:
+        """Возвращает узел по индексу"""
+        current_node = self.__head
+        for _ in range(index):
+            current_node = current_node.next
+        return current_node
+
+    def __is_index(self, index) -> bool:
+        if not isinstance(index, int):
+            return False
+        elif index > self.__len:
+            return False
+        return True
 
     @staticmethod
     def __linked_nodes(left: Node, right: Optional[Node]) -> None:
         left.next = right
-
-    @staticmethod
-    def __is_index(index) -> bool:
-        if not isinstance(index, int):
-            return False
-        return True
 
     @staticmethod
     def is_iterable(data) -> bool:
@@ -154,6 +199,7 @@ class LinkedList:
 
 
 if __name__ == '__main__':
-    l1 = LinkedList("abcd")
+    l1 = LinkedList("35749821")
     print(l1)
-    print(repr(l1))
+    l1.sort()
+    print(l1)
