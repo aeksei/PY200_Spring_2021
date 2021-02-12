@@ -69,7 +69,7 @@ class DoubleLinkedNode(Node):
     def __repr__(self) -> str:
         """Метод должен возвращать строку, показывающую, как может быть создан экземпляр."""
         # ToDo перегрузить метод
-        return f"{self.__class__.__name__}({self.value})"
+        return f"{self.__class__.__name__}({self.value}, {self.next}, {self.prev})"
 
     @property
     def prev(self):
@@ -84,19 +84,21 @@ class DoubleLinkedNode(Node):
 
 
 if __name__ == '__main__':
-    first_node = DoubleLinkedNode(5)
-    second_node = DoubleLinkedNode(10)
-    third_node = DoubleLinkedNode(15)
-    fourth_node = DoubleLinkedNode(20)
-
+    first_node = DoubleLinkedNode(1)
+    # second_node = DoubleLinkedNode(2)
+    # third_node = DoubleLinkedNode(3)
+    # fourth_node = DoubleLinkedNode(4)
+    # fifth_node = DoubleLinkedNode(5)
+    #
     print(repr(first_node))
-    print(repr(second_node))
-    print(repr(third_node))
-    print(repr(fourth_node))
-
-    head = first_node
-    first_node.next = second_node
-    second_node.prev = first_node
-
-    print(first_node.next)
-    print(second_node.prev)
+    # print(repr(second_node))
+    # print(repr(third_node))
+    # print(repr(fourth_node))
+    # print(repr(fifth_node))
+    #
+    # head = first_node
+    # first_node.next = second_node
+    # second_node.prev = first_node
+    #
+    # print(first_node.next)
+    # print(second_node.prev)
