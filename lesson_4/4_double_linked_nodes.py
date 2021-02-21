@@ -64,7 +64,7 @@ class DoubleLinkedNode(Node):
     def __init__(self, value: Any,
                  next_: Optional['Node'] = None,
                  prev: Optional['Node'] = None):
-        super(DoubleLinkedNode, self).__init__(value, next_)
+        super().__init__(value, next_)
         self.prev = prev
 
     @property
