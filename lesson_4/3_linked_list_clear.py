@@ -113,7 +113,11 @@ class LinkedList:
         left.next = right
 
     def clear(self):  # ToDo перегрузить метод для удаления всех узлов
-        ...
+        self.head = None
+        self.__len = 0
+
+    def get_node(self, index):
+        return self.__step_by_step_on_nodes(index)
 
 
 if __name__ == '__main__':
@@ -121,6 +125,7 @@ if __name__ == '__main__':
     print(sys.getrefcount(ll))
 
     # ToDo Вывести количество ссылок на каждый узел списка
-    ...
+    for i in range(len(ll)):
+        print(sys.getrefcount(ll.get_node(i)))
 
     ll.clear()
