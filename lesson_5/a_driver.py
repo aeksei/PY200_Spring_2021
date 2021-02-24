@@ -30,26 +30,40 @@ class IStructureDriver(ABC):
 
 
 class JsonFileDriver(IStructureDriver):
+    def __init__(self, json_filename):
+        self.json_filename = json_filename
+
+    def read(self) -> Sequence:
+        with open(self.json_filename) as fp:
+            return json.load(fp)
+
+    def write(self, data: Sequence, indent=4) -> None:
+        with open(self.json_filename, 'w') as fp:
+            data = [value for value in data]
+            json.dump(data, fp, indent=indent)
+
+
+class SimpleFileDriver(IStructureDriver):
     def __init__(self, filename):
         self.filename = filename
 
     def read(self) -> Sequence:
         with open(self.filename) as fp:
-            return json.load(fp)
+            return [int(value) for value in fp]
 
-    def write(self, data: Sequence, indent=4) -> None:
+    def write(self, data: Sequence) -> None:
         with open(self.filename, 'w') as fp:
-            json.dump(data, fp, indent=indent)
-
-
-class SimpleFileDriver(IStructureDriver):
-    ...
+            for value in data:
+                fp.write(str(value) + '\n')
 
 
 if __name__ == '__main__':
-    driver = JsonFileDriver('tmp.json')
+    driver_json = JsonFileDriver('tmp.json')
+    driver_txt = SimpleFileDriver('tmp.txt')
     d = [1, 2, 3, 4, 5]
-    driver.write(d)
-    output = driver.read()
+    driver_json.write(d)
+    output = driver_json.read()
 
     assert d == output
+
+    driver_txt.write(d)

@@ -14,24 +14,46 @@
 """
 
 from lesson_5.a_linkedlist import LinkedList
-from lesson_5.a_driver import IStructureDriver, JsonFileDriver
+from lesson_5.a_driver import IStructureDriver, JsonFileDriver, SimpleFileDriver
+from typing import Sequence
 
 
-class LinkedListWithDriver(...):
+class LinkedListWithDriver(LinkedList):
     def __init__(self, data, driver: IStructureDriver = None):
         # ToDo вызвать конструктор базового класса LinkedList
-        ...
+        super().__init__(data)
         self.__driver = driver
 
     def read(self):
         """Взять драйвер и считать из него информацию в LinkedList"""
-        ...
+        output = self.__driver.read()
+        self.clear()
+        for value in output:
+            self.append(value)
+
+    @property
+    def driver(self):
+        return self.__driver
+
+    @driver.setter
+    def driver(self, driver):
+        self.__driver = driver
 
     def write(self):
         """Взять драйвер и записать в него информацию из LinkedList"""
-        ...
+        self.__driver.write(self)
 
 
 if __name__ == '__main__':
-    ll = LinkedListWithDriver([1, 2, 3, 4, 5])
+    ll = LinkedListWithDriver([])
+    print(ll)
+
+    driver_json = JsonFileDriver('tmp.json')
+    driver_txt = SimpleFileDriver('tmp.txt')
+
+    ll.driver = driver_txt
+    ll.read()
+    print(ll)
+
+    ll.driver = driver_json
     ll.write()
