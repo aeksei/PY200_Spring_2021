@@ -6,6 +6,7 @@
 
 from typing import Sequence
 from abc import ABC, abstractmethod
+import json
 
 
 class IStructureDriver(ABC):
@@ -29,7 +30,16 @@ class IStructureDriver(ABC):
 
 
 class JsonFileDriver(IStructureDriver):
-    ...
+    def __init__(self, filename):
+        self.filename = filename
+
+    def read(self) -> Sequence:
+        with open(self.filename) as fp:
+            return json.load(fp)
+
+    def write(self, data: Sequence, indent=4) -> None:
+        with open(self.filename, 'w') as fp:
+            json.dump(data, fp, indent=indent)
 
 
 class SimpleFileDriver(IStructureDriver):
@@ -37,4 +47,9 @@ class SimpleFileDriver(IStructureDriver):
 
 
 if __name__ == '__main__':
-    ...
+    driver = JsonFileDriver('tmp.json')
+    d = [1, 2, 3, 4, 5]
+    driver.write(d)
+    output = driver.read()
+
+    assert d == output
