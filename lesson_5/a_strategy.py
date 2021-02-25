@@ -17,6 +17,8 @@ from lesson_5.a_linkedlist import LinkedList
 from lesson_5.a_driver import IStructureDriver, JsonFileDriver, SimpleFileDriver
 from typing import Sequence
 
+from lesson_5.b_fabric_method import FabricDriverBuilder
+
 
 class LinkedListWithDriver(LinkedList):
     def __init__(self, data, driver: IStructureDriver = None):
@@ -26,34 +28,38 @@ class LinkedListWithDriver(LinkedList):
 
     @property
     def driver(self):
-        return self.__driver
+        return self.__driver or FabricDriverBuilder.get_driver()
 
     @driver.setter
     def driver(self, driver):
+        if not isinstance(driver, IStructureDriver):
+            raise TypeError
         self.__driver = driver
 
     def read(self):
         """Взять драйвер и считать из него информацию в LinkedList"""
-        output = self.__driver.read()
+        output = self.driver.read()
         self.clear()
         for value in output:
             self.append(value)
 
     def write(self):
         """Взять драйвер и записать в него информацию из LinkedList"""
-        self.__driver.write(self)
+        self.driver.write(self)
 
 
 if __name__ == '__main__':
     ll = LinkedListWithDriver([])
-    print(ll)
-
-    driver_json = JsonFileDriver('tmp.json')
-    driver_txt = SimpleFileDriver('tmp.txt')
-
-    ll.driver = driver_txt
-    ll.read()
-    print(ll)
-
-    ll.driver = driver_json
+    # print(ll)
+    #
+    # driver_json = JsonFileDriver('tmp.json')
+    # driver_txt = SimpleFileDriver('tmp.txt')
+    #
+    # ll.driver = driver_txt
+    # ll.read()
+    # print(ll)
+    #
+    # ll.driver = driver_json
+    # ll.write()
+    # ll.driver = FabricDriverBuilder.get_driver()
     ll.write()

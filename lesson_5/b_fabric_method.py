@@ -13,7 +13,7 @@ from lesson_5.a_driver import IStructureDriver, JsonFileDriver, SimpleFileDriver
 
 class DriverBuilder(ABC):
     @abstractmethod
-    def build(self):
+    def build(self) -> IStructureDriver:
         ...
 
 
@@ -31,14 +31,24 @@ class JsonFileBuilder(DriverBuilder):
 
 
 class SimpleFileBuilder(DriverBuilder):
-    ...
+    DEFAULT_NAME = 'untitled.txt'
+
+    @classmethod
+    def build(cls) -> IStructureDriver:
+        filename = input('Введите название txt файла: (.txt)').strip()
+        filename = filename or cls.DEFAULT_NAME
+        if not filename.endswith('.txt'):
+            filename = f'{filename}.txt'
+
+        return SimpleFileDriver(filename)
 
 
 class FabricDriverBuilder:
     DRIVER_BUILDER = {
-        'json_file': JsonFileBuilder
+        'json_file': JsonFileBuilder,
+        'txt_file': SimpleFileBuilder,
     }
-    DEFAULT_DRIVER = 'json_file'
+    DEFAULT_DRIVER = 'txt_file'
 
     @classmethod
     def get_driver(cls):
@@ -51,3 +61,4 @@ class FabricDriverBuilder:
 
 if __name__ == '__main__':
     driver = FabricDriverBuilder.get_driver()
+    print(driver)
