@@ -24,13 +24,6 @@ class LinkedListWithDriver(LinkedList):
         super().__init__(data)
         self.__driver = driver
 
-    def read(self):
-        """Взять драйвер и считать из него информацию в LinkedList"""
-        output = self.__driver.read()
-        self.clear()
-        for value in output:
-            self.append(value)
-
     @property
     def driver(self):
         return self.__driver
@@ -38,6 +31,13 @@ class LinkedListWithDriver(LinkedList):
     @driver.setter
     def driver(self, driver):
         self.__driver = driver
+
+    def read(self):
+        """Взять драйвер и считать из него информацию в LinkedList"""
+        output = self.__driver.read()
+        self.clear()
+        for value in output:
+            self.append(value)
 
     def write(self):
         """Взять драйвер и записать в него информацию из LinkedList"""

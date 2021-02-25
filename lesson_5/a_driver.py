@@ -60,7 +60,7 @@ class SimpleFileDriver(IStructureDriver):
 if __name__ == '__main__':
     driver_json = JsonFileDriver('tmp.json')
     driver_txt = SimpleFileDriver('tmp.txt')
-    d = [1, 2, 3, 4, 5]
+    d = [1, 2, 3]
     driver_json.write(d)
     output = driver_json.read()
 
