@@ -14,7 +14,7 @@
 """
 
 from lesson_5.a_linkedlist import LinkedList
-from lesson_5.a_driver import IStructureDriver, JsonFileDriver, SimpleFileDriver
+from lesson_5.a_driver import IStructureDriver, JsonFileDriver, SimpleFileDriver, CSVFileDriver
 from typing import Sequence
 
 from lesson_5.b_fabric_method import FabricDriverBuilder
@@ -32,8 +32,8 @@ class LinkedListWithDriver(LinkedList):
 
     @driver.setter
     def driver(self, driver):
-        if not isinstance(driver, IStructureDriver):
-            raise TypeError
+        # if not isinstance(driver, IStructureDriver):
+        #     raise TypeError
         self.__driver = driver
 
     def read(self):
@@ -49,17 +49,11 @@ class LinkedListWithDriver(LinkedList):
 
 
 if __name__ == '__main__':
-    ll = LinkedListWithDriver([])
-    # print(ll)
-    #
-    # driver_json = JsonFileDriver('tmp.json')
-    # driver_txt = SimpleFileDriver('tmp.txt')
-    #
-    # ll.driver = driver_txt
-    # ll.read()
-    # print(ll)
-    #
-    # ll.driver = driver_json
-    # ll.write()
-    # ll.driver = FabricDriverBuilder.get_driver()
+    ll = LinkedListWithDriver([1, 2, 3])
+
+    ll.driver = FabricDriverBuilder.get_driver()
     ll.write()
+
+    ll.driver = FabricDriverBuilder.get_driver()
+    ll.write()
+

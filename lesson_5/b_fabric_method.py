@@ -8,7 +8,7 @@
 
 from abc import ABC, abstractmethod
 
-from lesson_5.a_driver import IStructureDriver, JsonFileDriver, SimpleFileDriver
+from lesson_5.a_driver import IStructureDriver, JsonFileDriver, SimpleFileDriver, CSVFileDriver
 
 
 class DriverBuilder(ABC):
@@ -43,12 +43,26 @@ class SimpleFileBuilder(DriverBuilder):
         return SimpleFileDriver(filename)
 
 
+class CSVFileBuilder(DriverBuilder):
+    DEFAULT_NAME = 'untitled.csv'
+
+    @classmethod
+    def build(cls) -> IStructureDriver:
+        filename = input('Введите название csv файла: (.csv)').strip()
+        filename = filename or cls.DEFAULT_NAME
+        if not filename.endswith('.csv'):
+            filename = f'{filename}.csv'
+
+        return CSVFileDriver(filename)
+
+
 class FabricDriverBuilder:
     DRIVER_BUILDER = {
-        'json_file': JsonFileBuilder,
-        'txt_file': SimpleFileBuilder,
+        'json': JsonFileBuilder,
+        'txt': SimpleFileBuilder,
+        'csv': CSVFileBuilder
     }
-    DEFAULT_DRIVER = 'txt_file'
+    DEFAULT_DRIVER = 'csv'
 
     @classmethod
     def get_driver(cls):

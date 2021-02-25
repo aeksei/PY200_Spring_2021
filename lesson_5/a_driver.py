@@ -7,6 +7,8 @@
 from typing import Sequence
 from abc import ABC, abstractmethod
 import json
+import csv
+import random
 
 
 class IStructureDriver(ABC):
@@ -57,13 +59,35 @@ class SimpleFileDriver(IStructureDriver):
                 fp.write(str(value) + '\n')
 
 
+class CSVFileDriver(IStructureDriver):
+    def __init__(self, filename):
+        self.filename = filename
+
+    def read(self) -> Sequence:
+        with open(self.filename, newline='') as csvfile:
+            reader = csv.reader(csvfile)
+            data = [value for value in reader][0]
+            return [int(value) for value in data]
+
+    def write(self, data: Sequence) -> None:
+        with open(self.filename, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow([value for value in data])
+
+
 if __name__ == '__main__':
     driver_json = JsonFileDriver('tmp.json')
     driver_txt = SimpleFileDriver('tmp.txt')
-    d = [1, 2, 3]
+    driver_csv = CSVFileDriver('tmp.csv')
+    d = [random.randint(-10, 10) for i in range(10)]
+    driver_csv.write(d)
     driver_json.write(d)
-    output = driver_json.read()
-
-    assert d == output
-
     driver_txt.write(d)
+    output_csv = driver_csv.read()
+    output_json = driver_json.read()
+    output_txt = driver_txt.read()
+    print(output_csv)
+    print(output_json)
+    print(output_txt)
+
+    assert d == output_csv and output_json and output_txt
