@@ -9,6 +9,8 @@ from abc import ABC, abstractmethod
 import json
 import csv
 import random
+import yaml
+import pickle
 
 
 class IStructureDriver(ABC):
@@ -39,10 +41,10 @@ class JsonFileDriver(IStructureDriver):
         with open(self.json_filename) as fp:
             return json.load(fp)
 
-    def write(self, data: Sequence, indent=4) -> None:
+    def write(self, data: Sequence) -> None:
         with open(self.json_filename, 'w') as fp:
             data = [value for value in data]
-            json.dump(data, fp, indent=indent)
+            json.dump(data, fp, indent=4)
 
 
 class SimpleFileDriver(IStructureDriver):
@@ -60,34 +62,54 @@ class SimpleFileDriver(IStructureDriver):
 
 
 class CSVFileDriver(IStructureDriver):
-    def __init__(self, filename):
-        self.filename = filename
+    def __init__(self, csv_filename):
+        self.csv_filename = csv_filename
 
     def read(self) -> Sequence:
-        with open(self.filename, newline='') as csvfile:
-            reader = csv.reader(csvfile)
-            data = [value for value in reader][0]
-            return [int(value) for value in data]
+        with open(self.csv_filename, newline='') as fp:
+            reader = csv.reader(fp)
+            return [int(', '.join(row)) for row in reader]
 
     def write(self, data: Sequence) -> None:
-        with open(self.filename, 'w', newline='') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow([value for value in data])
+        with open(self.csv_filename, 'w', newline='') as fp:
+            writer = csv.writer(fp, delimiter='\n')
+            writer.writerows([data])
+
+
+class YamlFileDriver(IStructureDriver):
+    def __init__(self, yaml_filename):
+        self.yaml_filename = yaml_filename
+
+    def read(self) -> Sequence:
+        with open(self.yaml_filename) as fp:
+            return yaml.load(fp, Loader=yaml.FullLoader)
+
+    def write(self, data: Sequence) -> None:
+        with open(self.yaml_filename, 'w') as fp:
+            yaml.dump(data, fp)
 
 
 if __name__ == '__main__':
     driver_json = JsonFileDriver('tmp.json')
-    driver_txt = SimpleFileDriver('tmp.txt')
-    driver_csv = CSVFileDriver('tmp.csv')
-    d = [random.randint(-10, 10) for i in range(10)]
-    driver_csv.write(d)
-    driver_json.write(d)
-    driver_txt.write(d)
-    output_csv = driver_csv.read()
+    # driver_txt = SimpleFileDriver('tmp.txt')
+    # driver_csv = CSVFileDriver('tmp.csv')
+    driver_yaml = YamlFileDriver('tmp.yaml')
+    # d = [random.randint(-10, 10) for i in range(10)]
+    # driver_csv.write(d)
+    crazy_dict = dict({'string': None, 'int': 2, 555: True})
+    driver_json.write(crazy_dict)
+    # driver_txt.write(d)
+    # driver_yaml.write(d)
+    # output_csv = driver_csv.read()
     output_json = driver_json.read()
-    output_txt = driver_txt.read()
-    print(output_csv)
+    # output_txt = driver_txt.read()
+    output_yaml = driver_yaml.read()
+    # driver_csv.write(output_txt)
+    # driver_json.write(output_txt)
+    driver_yaml.write(output_json)
+    # print(output_csv)
     print(output_json)
-    print(output_txt)
+    # print(output_txt)
+    print(output_yaml)
 
-    assert d == output_csv and output_json and output_txt
+    # assert d == output_csv and output_json and output_txt

@@ -8,7 +8,7 @@
 
 from abc import ABC, abstractmethod
 
-from lesson_5.a_driver import IStructureDriver, JsonFileDriver, SimpleFileDriver, CSVFileDriver
+from lesson_5.a_driver import IStructureDriver, JsonFileDriver, SimpleFileDriver, CSVFileDriver, YamlFileDriver
 
 
 class DriverBuilder(ABC):
@@ -56,23 +56,36 @@ class CSVFileBuilder(DriverBuilder):
         return CSVFileDriver(filename)
 
 
+class YamlFileBuilder(DriverBuilder):
+    DEFAULT_NAME = 'untitled.yaml'
+
+    @classmethod
+    def build(cls) -> IStructureDriver:
+        filename = input('Введите название csv файла: (.yaml)').strip()
+        filename = filename or cls.DEFAULT_NAME
+        if not filename.endswith('.yaml'):
+            filename = f'{filename}.yaml'
+
+        return YamlFileDriver(filename)
+
+
 class FabricDriverBuilder:
-    DRIVER_BUILDER = {
-        'json': JsonFileBuilder,
-        'txt': SimpleFileBuilder,
-        'csv': CSVFileBuilder
-    }
-    DEFAULT_DRIVER = 'csv'
+    class DriverBuilderChoice:
+        json = JsonFileBuilder
+        txt = SimpleFileBuilder
+        csv = CSVFileBuilder
+        yaml = YamlFileBuilder
 
     @classmethod
     def get_driver(cls):
-        driver_name = input("Введите название драйвера: ")
-        driver_name = driver_name or cls.DEFAULT_DRIVER
-
-        driver_builder = cls.DRIVER_BUILDER[driver_name]
+        driver_name = input("Введите название драйвера: ").strip()
+        driver_builder = getattr(cls.DriverBuilderChoice, driver_name)
         return driver_builder.build()
 
 
 if __name__ == '__main__':
     driver = FabricDriverBuilder.get_driver()
     print(driver)
+
+    # choice_builders = ...
+    # print(choice_builders)

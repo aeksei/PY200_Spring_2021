@@ -31,9 +31,9 @@ class LinkedListWithDriver(LinkedList):
         return self.__driver or FabricDriverBuilder.get_driver()
 
     @driver.setter
-    def driver(self, driver):
-        # if not isinstance(driver, IStructureDriver):
-        #     raise TypeError
+    def driver(self, driver: IStructureDriver):
+        if not isinstance(driver, IStructureDriver):
+            raise TypeError
         self.__driver = driver
 
     def read(self):
@@ -50,10 +50,9 @@ class LinkedListWithDriver(LinkedList):
 
 if __name__ == '__main__':
     ll = LinkedListWithDriver([1, 2, 3])
-
+    print(ll)
     ll.driver = FabricDriverBuilder.get_driver()
-    ll.write()
+    ll.driver.write([234, 24, 24, 222])
+    print(ll.driver)
 
-    ll.driver = FabricDriverBuilder.get_driver()
-    ll.write()
 
