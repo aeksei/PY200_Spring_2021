@@ -89,27 +89,44 @@ class YamlFileDriver(IStructureDriver):
             yaml.dump(data, fp)
 
 
+class PickleFileDriver(IStructureDriver):
+    def __init__(self, pickle_filename):
+        self.pickle_filename = pickle_filename
+
+    def read(self) -> Sequence:
+        with open(self.pickle_filename, 'rb') as fp:
+            return pickle.load(fp)
+
+    def write(self, data: Sequence) -> None:
+        with open(self.pickle_filename, 'wb') as fp:
+            pickle.dump(data, fp, pickle.DEFAULT_PROTOCOL)
+
+
 if __name__ == '__main__':
-    driver_json = JsonFileDriver('tmp.json')
+    # driver_json = JsonFileDriver('tmp.json')
     # driver_txt = SimpleFileDriver('tmp.txt')
     # driver_csv = CSVFileDriver('tmp.csv')
-    driver_yaml = YamlFileDriver('tmp.yaml')
+    # driver_yaml = YamlFileDriver('tmp.yaml')
+    driver_pickle = PickleFileDriver('tmp.pickle')
     # d = [random.randint(-10, 10) for i in range(10)]
+    # driver_pickle.write(d)
     # driver_csv.write(d)
     crazy_dict = dict({'string': None, 'int': 2, 555: True})
-    driver_json.write(crazy_dict)
+    # driver_json.write(crazy_dict)
     # driver_txt.write(d)
     # driver_yaml.write(d)
     # output_csv = driver_csv.read()
-    output_json = driver_json.read()
+    # output_json = driver_json.read()
     # output_txt = driver_txt.read()
-    output_yaml = driver_yaml.read()
+    # output_yaml = driver_yaml.read()
+    output_pickle = driver_pickle.read()
     # driver_csv.write(output_txt)
     # driver_json.write(output_txt)
-    driver_yaml.write(output_json)
+    # driver_yaml.write(output_json)
     # print(output_csv)
-    print(output_json)
+    # print(output_json)
     # print(output_txt)
-    print(output_yaml)
+    # print(output_yaml)
+    print(output_pickle)
 
     # assert d == output_csv and output_json and output_txt

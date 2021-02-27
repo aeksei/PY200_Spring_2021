@@ -8,7 +8,8 @@
 
 from abc import ABC, abstractmethod
 
-from lesson_5.a_driver import IStructureDriver, JsonFileDriver, SimpleFileDriver, CSVFileDriver, YamlFileDriver
+from lesson_5.a_driver import IStructureDriver, JsonFileDriver, SimpleFileDriver, CSVFileDriver, YamlFileDriver, \
+    PickleFileDriver
 
 
 class DriverBuilder(ABC):
@@ -69,16 +70,34 @@ class YamlFileBuilder(DriverBuilder):
         return YamlFileDriver(filename)
 
 
+class PickleFileBuilder(DriverBuilder):
+    DEFAULT_NAME = 'untitled.pickle'
+
+    @classmethod
+    def build(cls) -> IStructureDriver:
+        filename = input('Введите название csv файла: (.pickle)').strip()
+        filename = filename or cls.DEFAULT_NAME
+        if not filename.endswith('.pickle'):
+            filename = f'{filename}.pickle'
+
+        return PickleFileDriver(filename)
+
+
 class FabricDriverBuilder:
+    default_driver_name = 'txt'
+
     class DriverBuilderChoice:
         json = JsonFileBuilder
         txt = SimpleFileBuilder
         csv = CSVFileBuilder
         yaml = YamlFileBuilder
+        pickle = PickleFileBuilder
 
     @classmethod
     def get_driver(cls):
         driver_name = input("Введите название драйвера: ").strip()
+        if not driver_name:
+            driver_name = cls.default_driver_name
         driver_builder = getattr(cls.DriverBuilderChoice, driver_name)
         return driver_builder.build()
 
