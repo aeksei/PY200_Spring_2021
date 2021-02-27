@@ -75,7 +75,7 @@ class PickleFileBuilder(DriverBuilder):
 
     @classmethod
     def build(cls) -> IStructureDriver:
-        filename = input('Введите название csv файла: (.pickle)').strip()
+        filename = input('Введите название pickle файла: (.pickle)').strip()
         filename = filename or cls.DEFAULT_NAME
         if not filename.endswith('.pickle'):
             filename = f'{filename}.pickle'

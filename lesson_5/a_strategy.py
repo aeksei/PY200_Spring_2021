@@ -12,6 +12,7 @@
     5. LinkedListWithDriver должен поддерживать "горячую замену" драйвера, то есть без удаления и создания нового
         экземпляра LinkedListWithDriver, а замена драйвера существующего экземпляра.
 """
+from random import randint
 
 from lesson_5.a_linkedlist import LinkedList
 from lesson_5.a_driver import IStructureDriver, JsonFileDriver, SimpleFileDriver, CSVFileDriver
@@ -49,10 +50,10 @@ class LinkedListWithDriver(LinkedList):
 
 
 if __name__ == '__main__':
-    ll = LinkedListWithDriver([1, 2, 3])
-    print(ll)
-    ll.driver = FabricDriverBuilder.get_driver()
-    ll.driver.write([234, 24, 24, 222])
-    print(ll.driver)
-
-
+    d = [randint(-10, 10) for i in range(10)]
+    ll_rand = LinkedListWithDriver(d)
+    print(ll_rand)
+    ll_rand.driver = FabricDriverBuilder.get_driver()
+    # ll.driver = FabricDriverBuilder.get_driver()
+    ll_rand.driver.write(d)
+    print(ll_rand.driver.read())

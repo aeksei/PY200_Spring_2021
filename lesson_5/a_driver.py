@@ -108,11 +108,13 @@ if __name__ == '__main__':
     # driver_csv = CSVFileDriver('tmp.csv')
     # driver_yaml = YamlFileDriver('tmp.yaml')
     driver_pickle = PickleFileDriver('tmp.pickle')
-    # d = [random.randint(-10, 10) for i in range(10)]
+    d = [random.randint(-10, 10) for i in range(10)]
+    print(d)
     # driver_pickle.write(d)
     # driver_csv.write(d)
-    crazy_dict = dict({'string': None, 'int': 2, 555: True})
+    # crazy_dict = dict({'string': None, 'int': 2, 555: True})
     # driver_json.write(crazy_dict)
+    driver_pickle.write(d)
     # driver_txt.write(d)
     # driver_yaml.write(d)
     # output_csv = driver_csv.read()
