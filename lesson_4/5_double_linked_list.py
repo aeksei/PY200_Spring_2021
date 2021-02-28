@@ -1,5 +1,6 @@
 from typing import Any, Sequence, Optional
 import sys
+from random import randint
 
 """
 Двусвязный список на основе односвязного списка.
@@ -239,7 +240,7 @@ class LinkedList:
             self.tail.next = None
             self._len -= 1
 
-    def sort(self) -> None:
+    def sort(self, reverse=False) -> None:
         flag = True
         iterations = 0
         while flag:
@@ -248,9 +249,14 @@ class LinkedList:
                 current_node = self._step_by_step_on_nodes(i)
                 if not isinstance(current_node.value, type(current_node.next.value)):
                     raise TypeError(f'Cannot compare {current_node} and {current_node.next}')
-                if current_node.value > current_node.next.value:
-                    current_node.value, current_node.next.value = current_node.next.value, current_node.value
-                    flag = True
+                if not reverse:
+                    if current_node.value > current_node.next.value:
+                        current_node.value, current_node.next.value = current_node.next.value, current_node.value
+                        flag = True
+                else:
+                    if current_node.value < current_node.next.value:
+                        current_node.value, current_node.next.value = current_node.next.value, current_node.value
+                        flag = True
             iterations += 1
 
     @staticmethod
@@ -379,13 +385,17 @@ class DoubleLinkedList(LinkedList):
 
 
 if __name__ == '__main__':
-    dll = DoubleLinkedList([1, 2, 3, 4, 5, 6, 7, 8])
+    # dll = DoubleLinkedList([1, 2, 3, 4, 5, 6, 7, 8])
+    rand_dll = DoubleLinkedList([randint(-10, 10) for i in range(10)])
+    print(rand_dll)
+    rand_dll.sort(reverse=True)
+    print(rand_dll)
     # dll.insert(6, 55)
     # print(dll)
     # print(dll[5])
 
-    for i in range(len(dll)):
-        print(dll.get_node(i).__repr__())
+    # for i in range(len(dll)):
+    #     print(dll.get_node(i).__repr__())
 
-    for i in range(len(dll)):
-        print(sys.getrefcount(dll.get_node(i)))
+    # for i in range(len(dll)):
+    #     print(sys.getrefcount(dll.get_node(i)))
