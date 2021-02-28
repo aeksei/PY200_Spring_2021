@@ -62,8 +62,8 @@ class Node:
 
 class DoubleLinkedNode(Node):
     def __init__(self, value: Any,
-                 next_: Optional['Node'] = None,
-                 prev: Optional['Node'] = None):
+                 next_: Optional['DoubleLinkedNode'] = None,
+                 prev: Optional['DoubleLinkedNode'] = None):
         super().__init__(value, next_)
         self.prev = prev
 
@@ -73,7 +73,7 @@ class DoubleLinkedNode(Node):
         return self.__prev
 
     @prev.setter
-    def prev(self, prev: Optional['Node']):
+    def prev(self, prev: Optional['DoubleLinkedNode']):
         """Setter проверяет и устанавливает следующий узел связного списка"""
         self._is_node(prev)
         self.__prev = prev

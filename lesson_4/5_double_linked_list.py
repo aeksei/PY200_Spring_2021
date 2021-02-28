@@ -118,18 +118,23 @@ class LinkedList:
         return self.generator
 
     @staticmethod
-    def __linked_nodes(left: Node, right: Optional[Node]):
+    def _linked_nodes(left: Node, right: Optional[Node]):
         left.next = right
+
+    def _make_node(self, value: Any,
+                   next_: Optional['Node'] = None,
+                   prev: Optional['Node'] = None):
+        return self.Node(value, next_)
 
     def append(self, value: Any):
         """Добавление элемента в конец связного списка"""
-        append_node = self.Node(value)
+        append_node = self._make_node(value)
         if self.head is None:
             self.head = append_node
             self.tail = append_node
         else:
             tail = self.tail
-            self.__linked_nodes(tail, append_node)
+            self._linked_nodes(tail, append_node)
             self.tail = tail.next
         self.__len += 1
 
@@ -141,15 +146,16 @@ class LinkedList:
             index += self.__len
 
         if index <= 0:
-            insert_node = self.Node(value)
-            self.__linked_nodes(insert_node, self.head)
+            insert_node = self._make_node(value)
+            self._linked_nodes(insert_node, self.head)
             self.head = insert_node
             self.__len += 1
         elif 1 <= index <= self.__len-1:
             prev_node = self.__step_by_step_on_nodes(index-1)
             current_node = prev_node.next
-            insert_node = self.Node(value, next_=current_node)
-            self.__linked_nodes(prev_node, insert_node)
+            insert_node = self._make_node(value, next_=current_node, prev=prev_node)
+            self._linked_nodes(prev_node, insert_node)
+            self._linked_nodes(insert_node, current_node)
             self.__len += 1
         else:  # if index >= self.__len
             self.append(value)
@@ -193,7 +199,7 @@ class LinkedList:
 
                 if current_node.value == value:
                     current_node = current_node.next
-                    self.__linked_nodes(prev_node, current_node)
+                    self._linked_nodes(prev_node, current_node)
                     self.__len -= 1
                     flag *= 0
 
@@ -212,7 +218,9 @@ class LinkedList:
 
 class DoubleLinkedList(LinkedList):
     class DoubleLinkedNode(LinkedList.Node):
-        def __init__(self, value: Any, next_: Optional['Node'] = None, prev: Optional['Node'] = None):
+        def __init__(self, value: Any,
+                     next_: Optional['DoubleLinkedNode'] = None,
+                     prev: Optional['DoubleLinkedNode'] = None):
             super().__init__(value, next_)
             self.prev = prev
 
@@ -222,7 +230,7 @@ class DoubleLinkedList(LinkedList):
             return self.__prev
 
         @prev.setter
-        def prev(self, prev: Optional['Node']):
+        def prev(self, prev: Optional['DoubleLinkedNode']):
             """Setter проверяет и устанавливает следующий узел связного списка"""
             self._is_node(prev)
             self.__prev = prev
@@ -231,17 +239,33 @@ class DoubleLinkedList(LinkedList):
             """Метод должен возвращать строку, показывающую, как может быть создан экземпляр."""
             return f'{self.__class__.__name__}({self.value}, next={self.next}, prev={self.prev})'
 
+    def __init__(self, data: Sequence = None):
+        super().__init__(data)
+
+    @staticmethod
+    def _linked_nodes(left: DoubleLinkedNode, right: Optional[DoubleLinkedNode]):
+        left.next = right
+        right.prev = left
+
+    def _make_node(self, value: Any,
+                   next_: Optional['DoubleLinkedNode'] = None,
+                   prev: Optional['DoubleLinkedNode'] = None):
+        return self.DoubleLinkedNode(value, next_, prev)
+
+    def __reversed__(self):
+        self.current = self.tail
+        while self.current:
+            yield self.current.value
+            self.current = self.current.prev
+
 
 if __name__ == '__main__':
-    first_node = DoubleLinkedList([5])
-    second_node = DoubleLinkedList([10])
-
-    print(repr(first_node))
-    print(repr(second_node))
-
-    head = first_node
-    first_node.next = second_node
-    second_node.prev = first_node
-
-    print(repr(first_node.next))
-    print(repr(second_node.prev))
+    dll = DoubleLinkedList([1, 2, 3])
+    dll.insert(1, 3)
+    print(dll)
+    print(dll.index(3))
+    dll.append(4)
+    print(dll)
+    print([i for i in reversed(dll)])
+    dll.remove(3)
+    print(dll)
