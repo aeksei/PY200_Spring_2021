@@ -15,16 +15,17 @@ from a_driver import IStructureDriver, JsonFileDriver, SimpleFileDriver, CSVFile
 class DriverBuilder(ABC):
     UNTITLED = 'untitled'
 
-    def get_file_name(self, format):
-        filename = input(f'Введите название {format} файла: (.{format})').strip()
-        filename = filename or f'{self.UNTITLED}.{format}'
-        if not filename.endswith(f'.{format}'):
-            filename = f'{filename}.{format}'
+    @classmethod
+    def get_file_name(cls, driver_name):
+        filename = input(f'Введите название {driver_name} файла: (.{driver_name})').strip()
+        filename = filename or f'{cls.UNTITLED}.{driver_name}'
+        if not filename.endswith(f'.{driver_name}'):
+            filename = f'{driver_name}.{driver_name}'
 
         return filename
 
     @abstractmethod
-    def build(self, format) -> IStructureDriver:
+    def build(self, driver_name) -> IStructureDriver:
         ...
 
 
@@ -38,26 +39,23 @@ class DriverChoice:
 
 class BaseFileBuilder(DriverBuilder):
 
-    def build(self, format) -> IStructureDriver:
-        filename = self.get_file_name(format)
+    def build(self, driver_name) -> IStructureDriver:
+        filename = self.get_file_name(driver_name)
 
-        driver = getattr(DriverChoice, format)
-
-        return driver(filename)
+        return getattr(DriverChoice, driver_name)(filename)
 
 
 class FabricDriverBuilder:
-    default_format = 'txt'
+    default_driver = 'txt'
 
     @classmethod
     def get_driver(cls):
-        format = input("Введите название драйвера: ").strip()
-        format = format or cls.default_format
+        driver_name = input("Введите название драйвера: ").strip()
+        driver_name = driver_name or cls.default_driver
         builder = BaseFileBuilder()
-        return builder.build(format)
+        return builder.build(driver_name)
 
 
 if __name__ == '__main__':
     driver = FabricDriverBuilder.get_driver()
-    print(driver)
     print(driver)

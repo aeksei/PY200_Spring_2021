@@ -103,7 +103,6 @@ class FabricDriverBuilder:
 
 if __name__ == '__main__':
     driver = FabricDriverBuilder.get_driver()
-    print()
     print(driver)
 
     # choice_builders = ...
