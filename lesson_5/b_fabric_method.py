@@ -96,8 +96,7 @@ class FabricDriverBuilder:
     @classmethod
     def get_driver(cls):
         driver_name = input("Введите название драйвера: ").strip()
-        if not driver_name:
-            driver_name = cls.default_driver_name
+        driver_name = driver_name or cls.default_driver_name
         driver_builder = getattr(cls.DriverBuilderChoice, driver_name)
         return driver_builder.build()
 
