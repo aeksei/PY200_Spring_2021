@@ -274,7 +274,7 @@ class LinkedList:
         return self._step_by_step_on_nodes(index)
 
     def get_tail(self):
-        return self.head.next.__repr__()
+        return self.tail
 
 
 class DoubleLinkedList(LinkedList):
@@ -390,6 +390,7 @@ if __name__ == '__main__':
     print(rand_dll)
     rand_dll.sort(reverse=True)
     print(rand_dll)
+    print(rand_dll.get_tail())
     # dll.insert(6, 55)
     # print(dll)
     # print(dll[5])
