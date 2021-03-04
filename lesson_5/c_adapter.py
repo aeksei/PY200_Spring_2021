@@ -35,12 +35,20 @@ class NumpyAdapter:
 
     def index(self, value: Any) -> int:
         """Делаем для numpy массива возможность работы с методом index"""
-        ...
+        for i, np_value in enumerate(self.np_array):
+            if np_value == value:
+                return i
 
 
 class DictAdapter(dict):
+    def __init__(self, dict_: dict):
+        super().__init__()
+        self.dict_ = dict_
+
     def index(self, value: Any) -> int:
-        ...
+        for key in self.dict_:
+            if self.dict_[key] == value:
+                return key
 
 
 if __name__ == '__main__':
@@ -53,4 +61,5 @@ if __name__ == '__main__':
     print(server.find(numpy_adapter, 1))
 
     dict_adapter = DictAdapter({i: i for i in list_})
+    print(dict_adapter)
     print(server.find(dict_adapter, 1))

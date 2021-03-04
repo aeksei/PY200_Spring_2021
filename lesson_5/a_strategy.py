@@ -12,26 +12,47 @@
     5. LinkedListWithDriver должен поддерживать "горячую замену" драйвера, то есть без удаления и создания нового
         экземпляра LinkedListWithDriver, а замена драйвера существующего экземпляра.
 """
+from random import randint
 
 from lesson_5.a_linkedlist import LinkedList
-from lesson_5.a_driver import IStructureDriver, JsonFileDriver
+from lesson_5.a_driver import IStructureDriver
+
+from lesson_5.b_fabric_method import FabricDriverBuilder
 
 
-class LinkedListWithDriver(...):
+class LinkedListWithDriver(LinkedList):
     def __init__(self, data, driver: IStructureDriver = None):
         # ToDo вызвать конструктор базового класса LinkedList
-        ...
+        super().__init__(data)
+        self.__driver = driver
+
+    @property
+    def driver(self):
+        return self.__driver or FabricDriverBuilder.get_driver()
+
+    @driver.setter
+    def driver(self, driver: IStructureDriver):
+        if not isinstance(driver, IStructureDriver):
+            raise TypeError
         self.__driver = driver
 
     def read(self):
         """Взять драйвер и считать из него информацию в LinkedList"""
-        ...
+        output = self.driver.read()
+        self.clear()
+        for value in output:
+            self.append(value)
 
     def write(self):
         """Взять драйвер и записать в него информацию из LinkedList"""
-        ...
+        self.driver.write(self)
 
 
 if __name__ == '__main__':
-    ll = LinkedListWithDriver([1, 2, 3, 4, 5])
-    ll.write()
+    d = [randint(-10, 10) for i in range(10)]
+    ll_rand = LinkedListWithDriver(d)
+    print(ll_rand)
+    ll_rand.driver = FabricDriverBuilder.get_driver()
+    # ll.driver = FabricDriverBuilder.get_driver()
+    ll_rand.driver.write(d)
+    print(ll_rand.driver.read())

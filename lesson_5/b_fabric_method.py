@@ -8,12 +8,13 @@
 
 from abc import ABC, abstractmethod
 
-from lesson_5.a_driver import IStructureDriver, JsonFileDriver, SimpleFileDriver
+from lesson_5.a_driver import IStructureDriver, JsonFileDriver, SimpleFileDriver, CSVFileDriver, YamlFileDriver, \
+    PickleFileDriver
 
 
 class DriverBuilder(ABC):
     @abstractmethod
-    def build(self):
+    def build(self) -> IStructureDriver:
         ...
 
 
@@ -31,23 +32,78 @@ class JsonFileBuilder(DriverBuilder):
 
 
 class SimpleFileBuilder(DriverBuilder):
-    ...
+    DEFAULT_NAME = 'untitled.txt'
+
+    @classmethod
+    def build(cls) -> IStructureDriver:
+        filename = input('Введите название txt файла: (.txt)').strip()
+        filename = filename or cls.DEFAULT_NAME
+        if not filename.endswith('.txt'):
+            filename = f'{filename}.txt'
+
+        return SimpleFileDriver(filename)
+
+
+class CSVFileBuilder(DriverBuilder):
+    DEFAULT_NAME = 'untitled.csv'
+
+    @classmethod
+    def build(cls) -> IStructureDriver:
+        filename = input('Введите название csv файла: (.csv)').strip()
+        filename = filename or cls.DEFAULT_NAME
+        if not filename.endswith('.csv'):
+            filename = f'{filename}.csv'
+
+        return CSVFileDriver(filename)
+
+
+class YamlFileBuilder(DriverBuilder):
+    DEFAULT_NAME = 'untitled.yaml'
+
+    @classmethod
+    def build(cls) -> IStructureDriver:
+        filename = input('Введите название csv файла: (.yaml)').strip()
+        filename = filename or cls.DEFAULT_NAME
+        if not filename.endswith('.yaml'):
+            filename = f'{filename}.yaml'
+
+        return YamlFileDriver(filename)
+
+
+class PickleFileBuilder(DriverBuilder):
+    DEFAULT_NAME = 'untitled.pickle'
+
+    @classmethod
+    def build(cls) -> IStructureDriver:
+        filename = input('Введите название pickle файла: (.pickle)').strip()
+        filename = filename or cls.DEFAULT_NAME
+        if not filename.endswith('.pickle'):
+            filename = f'{filename}.pickle'
+
+        return PickleFileDriver(filename)
 
 
 class FabricDriverBuilder:
-    DRIVER_BUILDER = {
-        'json_file': JsonFileBuilder
-    }
-    DEFAULT_DRIVER = 'json_file'
+    default_driver_name = 'txt'
+
+    class DriverBuilderChoice:
+        json = JsonFileBuilder
+        txt = SimpleFileBuilder
+        csv = CSVFileBuilder
+        yaml = YamlFileBuilder
+        pickle = PickleFileBuilder
 
     @classmethod
     def get_driver(cls):
-        driver_name = input("Введите название драйвера: ")
-        driver_name = driver_name or cls.DEFAULT_DRIVER
-
-        driver_builder = cls.DRIVER_BUILDER[driver_name]
+        driver_name = input("Введите название драйвера: ").strip()
+        driver_name = driver_name or cls.default_driver_name
+        driver_builder = getattr(cls.DriverBuilderChoice, driver_name)
         return driver_builder.build()
 
 
 if __name__ == '__main__':
     driver = FabricDriverBuilder.get_driver()
+    print(driver)
+
+    # choice_builders = ...
+    # print(choice_builders)
